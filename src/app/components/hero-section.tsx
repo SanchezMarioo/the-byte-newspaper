@@ -90,6 +90,7 @@ export default function HeroSection() {
                 </div>
 
                 {/* Sección de Topics - Carrusel interactivo */}
+                </div>
                 <div className="col-span-3 mt-16 lg:mt-20">
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center justify-between">
@@ -125,7 +126,7 @@ export default function HeroSection() {
                         </div>
                         
                         {/* Carrusel de tags */}
-                        <div className="relative">
+                        <div className="relative bg-gray-100">
                             <div 
                                 ref={scrollRef}
                                 onScroll={checkScrollButtons}
@@ -152,7 +153,6 @@ export default function HeroSection() {
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
     )
 }
