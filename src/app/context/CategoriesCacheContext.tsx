@@ -50,16 +50,20 @@ export function CategoriesCacheProvider({ children }: { children: ReactNode }) {
       `${CATEGORIES_CACHE_KEY}_timestamp`
     );
     const now = Date.now();
+    const cacheTimestampMs = cacheTimestamp ? parseInt(cacheTimestamp, 10) : null;
 
     const isCacheValid =
-      cachedData &&
-      cacheTimestamp &&
-      now - parseInt(cacheTimestamp) <
+      !!cachedData &&
+      cacheTimestampMs !== null &&
+      !Number.isNaN(cacheTimestampMs) &&
+      now - cacheTimestampMs <
         CATEGORIES_CACHE_EXPIRY_HOURS * 60 * 60 * 1000;
 
     const shouldRevalidate =
-      cacheTimestamp &&
-      now - parseInt(cacheTimestamp) >
+      !!cachedData &&
+      cacheTimestampMs !== null &&
+      !Number.isNaN(cacheTimestampMs) &&
+      now - cacheTimestampMs >
         REVALIDATE_INTERVAL_MINUTES * 60 * 1000;
 
     if (!forceRefresh && isCacheValid && !shouldRevalidate) {
