@@ -25,11 +25,12 @@ export default function ArticlePage() {
   return (
     <>
       <Header />
-      <article className="bg-stone-200 dark:bg-[#181617] text-black dark:text-white transition-colors duration-300 py-12">
+      <article className="bg-stone-200 dark:bg-[#181617] text-black dark:text-white transition-colors duration-300">
         <div className="w-3/4 mx-auto">
           {/* Header */}
-
-          <div className="flex flex-wrap gap-2">
+          <h1 className="text-3xl font-bold">{article.title}</h1>
+          <div className="flex flex-wrap gap-2 py-4">
+            
             {article.tags.map((tag, index) => (
               <span
                 key={index}

@@ -107,7 +107,7 @@ export default function ArticleHeader() {
               </button>
               <button
                 onClick={toggleTheme}
-                className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 group transition duration-200 cursor-pointer rounded-lg"
+                className="px-3 py-2  hover:bg-gray-200 dark:hover:bg-gray-700 group transition duration-200 cursor-pointer rounded-lg"
                 aria-label={`Cambiar a modo ${isDarkMode ? "claro" : "oscuro"}`}
               >
                 {isDarkMode ? (
@@ -115,9 +115,6 @@ export default function ArticleHeader() {
                 ) : (
                   <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white" />
                 )}
-              </button>
-              <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-200 rounded-lg">
-                <Rss className="w-5 h-5 text-gray-700 dark:text-gray-300 p-2" />
               </button>
             </div>
             <button
