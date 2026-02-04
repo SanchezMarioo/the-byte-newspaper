@@ -20,6 +20,8 @@ interface Category {
 interface CategoriesCacheContextType {
   categories: Category[];
   isLoading: boolean;
+  refreshCategories: () => Promise<void>;
+  clearCache: () => void;
 }
 
 const CategoriesCacheContext = createContext<
@@ -34,86 +36,97 @@ export function CategoriesCacheProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const { language } = useLanguage();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      // Intentar cargar del cache localStorage
-      const cachedData = localStorage.getItem(CATEGORIES_CACHE_KEY);
-      const cacheTimestamp = localStorage.getItem(
-        `${CATEGORIES_CACHE_KEY}_timestamp`,
-      );
-      const now = Date.now();
+  const clearCache = () => {
+    localStorage.removeItem(CATEGORIES_CACHE_KEY);
+    localStorage.removeItem(`${CATEGORIES_CACHE_KEY}_timestamp`);
+  };
 
-      if (
-        cachedData &&
-        cacheTimestamp &&
-        now - parseInt(cacheTimestamp) <
-          CATEGORIES_CACHE_EXPIRY_HOURS * 60 * 60 * 1000
-      ) {
-        // Cache válido, usar datos cacheados (sin mostrar loading)
-        try {
-          const parsed = JSON.parse(cachedData);
-          const categoriesWithLanguage = parsed.map((cat: Category) => ({
-            ...cat,
-            name:
-              language === "es"
-                ? cat.name_es || cat.name_en || "Unknown"
-                : cat.name_en || cat.name_es || "Unknown",
-          }));
-          setCategories(categoriesWithLanguage);
-          setIsLoading(false);
-          return;
-        } catch (error) {
-          console.error("Error al parsear cache de categorías:", error);
-        }
-      }
+  const fetchCategories = async (forceRefresh: boolean = false) => {
+    // Intentar cargar del cache localStorage
+    const cachedData = localStorage.getItem(CATEGORIES_CACHE_KEY);
+    const cacheTimestamp = localStorage.getItem(
+      `${CATEGORIES_CACHE_KEY}_timestamp`
+    );
+    const now = Date.now();
 
-      // Si no hay cache válido, hacer fetch desde la API
-      setIsLoading(true);
+    if (
+      !forceRefresh &&
+      cachedData &&
+      cacheTimestamp &&
+      now - parseInt(cacheTimestamp) <
+        CATEGORIES_CACHE_EXPIRY_HOURS * 60 * 60 * 1000
+    ) {
+      // Cache válido, usar datos cacheados (sin mostrar loading)
       try {
-        const response = await fetch("/api/categories");
-        if (!response.ok) throw new Error("Failed to fetch categories");
-        const data = await response.json();
-
-        // Extraer el array de categorías desde data.docs
-        const categoriesArray = data.docs || [];
-
-        // Mapear los datos de la API guardando name_en y name_es
-        const categoriesWithActive = categoriesArray.map(
-          (category: any, index: number) => ({
-            id: category.id,
-            name_en: category.name_en || "Unknown",
-            name_es: category.name_es || "Unknown",
-            name:
-              language === "es"
-                ? category.name_es || category.name_en || "Unknown"
-                : category.name_en || category.name_es || "Unknown",
-            isActive: index === 0,
-          }),
-        );
-
-        setCategories(categoriesWithActive);
-
-        // Guardar en cache localStorage
-        try {
-          localStorage.setItem(
-            CATEGORIES_CACHE_KEY,
-            JSON.stringify(categoriesWithActive),
-          );
-          localStorage.setItem(
-            `${CATEGORIES_CACHE_KEY}_timestamp`,
-            now.toString(),
-          );
-        } catch (error) {
-          console.error("Error al guardar cache de categorías:", error);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setCategories([]);
-      } finally {
+        const parsed = JSON.parse(cachedData);
+        const categoriesWithLanguage = parsed.map((cat: Category) => ({
+          ...cat,
+          name:
+            language === "es"
+              ? cat.name_es || cat.name_en || "Unknown"
+              : cat.name_en || cat.name_es || "Unknown",
+        }));
+        setCategories(categoriesWithLanguage);
         setIsLoading(false);
+        return;
+      } catch (error) {
+        console.error("Error al parsear cache de categorías:", error);
       }
-    };
+    }
 
+    // Si no hay cache válido, hacer fetch desde la API
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/categories");
+      if (!response.ok) throw new Error("Failed to fetch categories");
+      const data = await response.json();
+
+      // Extraer el array de categorías desde data.docs
+      const categoriesArray = data.docs || [];
+
+      // Mapear los datos de la API guardando name_en y name_es
+      const categoriesWithActive = categoriesArray.map(
+        (category: any, index: number) => ({
+          id: category.id,
+          name_en: category.name_en || "Unknown",
+          name_es: category.name_es || "Unknown",
+          name:
+            language === "es"
+              ? category.name_es || category.name_en || "Unknown"
+              : category.name_en || category.name_es || "Unknown",
+          isActive: index === 0,
+        }),
+      );
+
+      setCategories(categoriesWithActive);
+
+      // Guardar en cache localStorage
+      try {
+        localStorage.setItem(
+          CATEGORIES_CACHE_KEY,
+          JSON.stringify(categoriesWithActive),
+        );
+        localStorage.setItem(
+          `${CATEGORIES_CACHE_KEY}_timestamp`,
+          now.toString(),
+        );
+      } catch (error) {
+        console.error("Error al guardar cache de categorías:", error);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setCategories([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const refreshCategories = async () => {
+    clearCache();
+    await fetchCategories(true);
+  };
+
+  useEffect(() => {
     fetchCategories();
   }, []);
 
@@ -135,6 +148,8 @@ export function CategoriesCacheProvider({ children }: { children: ReactNode }) {
       value={{
         categories,
         isLoading,
+        refreshCategories,
+        clearCache,
       }}
     >
       {children}

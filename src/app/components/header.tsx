@@ -4,11 +4,14 @@ import Link from "next/link";
 import { BrightnessLow, Moon, Rss, Menu, X } from "@mynaui/icons-react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
+import { useCategoriesCache } from "@/app/context/CategoriesCacheContext";
+
 
 export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(true); // Por defecto modo oscuro
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { language, setLanguage } = useLanguage();
+  const { refreshCategories } = useCategoriesCache();
 
   // Cargar preferencia del localStorage al montar el componente
   useEffect(() => {
@@ -226,6 +229,9 @@ export default function Header() {
                   aria-label="Toggle language"
                 >
                   {language.toUpperCase()}
+                </button>
+                <button onClick={refreshCategories}>
+                  Actualizar Categorías
                 </button>
               </div>
             </div>
