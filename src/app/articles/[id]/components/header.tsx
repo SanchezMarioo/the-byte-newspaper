@@ -1,11 +1,17 @@
 "use client";
 
+import { useParams } from "next/navigation";
+import { useArticlesCache } from "@/app/context/ArticlesCacheContext";
 import Link from "next/link";
 import { BrightnessLow, Moon, Rss, Menu, X } from "@mynaui/icons-react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
 
-export default function Header() {
+export default function ArticleHeader() {
+  const params = useParams();
+  const { getArticle } = useArticlesCache();
+  const articleId = parseInt(params.id as string);
+  const article = getArticle(articleId);
   const [isDarkMode, setIsDarkMode] = useState(true); // Por defecto modo oscuro
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { language, setLanguage } = useLanguage();
@@ -47,6 +53,8 @@ export default function Header() {
     const newLanguage = language === "es" ? "en" : "es";
     setLanguage(newLanguage);
   };
+
+  if (!article) return null;
 
   return (
     <header className="mx-auto w-[78%]">
