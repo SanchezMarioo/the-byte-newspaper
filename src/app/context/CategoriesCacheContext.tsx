@@ -105,7 +105,8 @@ export function CategoriesCacheProvider({ children }: { children: ReactNode }) {
 
     // Si no hay cache válido o debe refrescar, hacer fetch desde la API
     if (forceRefresh || !isCacheValid || shouldRevalidate) {
-      setIsLoading(forceRefresh); // Solo mostrar loading si es refresh manual
+      const shouldShowLoading = forceRefresh || !isCacheValid;
+      setIsLoading(shouldShowLoading);
       try {
         const response = await fetch("/api/categories");
         if (!response.ok) throw new Error("Failed to fetch categories");
