@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useArticlesCache } from "@/app/context/ArticlesCacheContext";
 import Header from "./components/header";
+import HeroSection from "./components/hero";
 
 export default function ArticlePage() {
   const { getArticle } = useArticlesCache();
@@ -28,17 +29,21 @@ export default function ArticlePage() {
       <article className="bg-stone-200 dark:bg-[#181617] text-black dark:text-white transition-colors duration-300">
         <div className="w-3/4 mx-auto">
           {/* Header */}
-          <h1 className="text-3xl font-bold">{article.title}</h1>
-          <div className="flex flex-wrap gap-2 py-4">
-            
-            {article.tags.map((tag, index) => (
-              <span
-                key={index}
-                className="border border-black dark:border-white px-3 py-1 text-xs font-semibold uppercase"
-              >
-                {tag}
-              </span>
-            ))}
+          <HeroSection
+            title={article.title}
+            topic={article.tags}
+            author={article.author}
+            date={article.date}
+          />
+          <div className="flex items-center justify-center ">
+            <figure className="p-4 border-2 border-white">
+              <img
+                src="https://img.asmedia.epimg.net/resizer/v2/22OGAWGBPJCZBNQYNALXPPYLU4.png?auth=0f806312fc221e5a51b5e81855e19f56a7435ab953505c1831eb85a59e657049&width=1200&height=675&smart=true"
+                width={900}
+                height={500}
+              />
+ 
+            </figure>
           </div>
 
           {/* Content */}
@@ -47,7 +52,7 @@ export default function ArticlePage() {
               {article.description}
             </p>
 
-            <div className="space-y-4 text-base leading-relaxed">
+            <div className=" py-5 space-y-4 text-base leading-relaxed">
               {article.content
                 .split("\n")
                 .filter((paragraph) => paragraph.trim())

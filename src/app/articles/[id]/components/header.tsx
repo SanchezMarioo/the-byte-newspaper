@@ -58,43 +58,38 @@ export default function ArticleHeader() {
 
   return (
     <header className="mx-auto w-[78%]">
-      <div className="p-4 2xl:p-8">
-        <div className="grid grid-cols-1 2xl:grid-cols-3 gap-0 h-auto 2xl:h-32 2xl:border-b 2xl:border-black dark:2xl:border-white">
-          {/* Columna 1: Título principal */}
-          <div className="2xl:border-r 2xl:border-black dark:2xl:border-white flex items-center justify-center p-2 2xl:p-4">
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-7xl font-bold font-display text-black dark:text-white text-center">
-              The Byte
-            </h1>
+      <div className="pt-4 2xl:pt-8">
+        <div className="flex justify-between items-center border-b-2 p-4">
+          <div className="flex">
+            {/* Columna 1: Título principal */}
+            <div className="flex items-center justify-center p-2 2xl:p-4">
+              <h1 className="text-md sm:text-xl md:text-3xl lg:text-3xl xl:text-5xl font-bold font-display text-black dark:text-white text-center">
+                The Byte
+              </h1>
+            </div>
+            <div className="flex flex-col justify-center px-4 2xl:px-6 font-display py-2 2xl:py-0 text-center 2xl:text-left">
+              <h2 className="text-sm sm:text-base md:text-lg lg:text-lg xl:text-lg 2xl:text-lg font-semibold mb-1 text-black dark:text-white">
+                Understanding AI, one story at a time.
+                <span className="text-xs sm:text-sm md:text-sm lg:text-sm xl:text-md 2xl:text-md italic mt-1 2xl:mt-2 text-black dark:text-white"> Since 2026</span>
+              </h2>
+            </div>
           </div>
-
-          {/* Columna 2: Descripción */}
-          <div className="2xl:border-r 2xl:border-black dark:2xl:border-white flex flex-col justify-center px-4 2xl:px-6 font-display py-2 2xl:py-0 text-center 2xl:text-left">
-            <h2 className="text-sm sm:text-base md:text-lg lg:text-lg xl:text-lg 2xl:text-lg font-semibold mb-1 text-black dark:text-white">
-              Breaking the news
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-lg xl:text-lg 2xl:text-lg text-black dark:text-white">
-              byte by byte.
-            </p>
-            <p className="text-xs sm:text-sm md:text-sm lg:text-sm xl:text-sm 2xl:text-sm italic mt-1 2xl:mt-2 text-black dark:text-white">
-              Since 2025
-            </p>
-          </div>
-
-          {/* Columna 3: Información adicional */}
+          {/* Columna 2: Información adicional */}
           <div className="flex items-end justify-center 2xl:justify-start font-display p-2 2xl:p-4 text-center 2xl:text-left">
-            <p className="text-xs sm:text-sm md:text-sm lg:text-sm xl:text-sm 2xl:text-md text-black dark:text-white">
+            <p className="text-sm sm:text-sm md:text-sm lg:text-sm xl:text-lg 2xl:text-lg text-black dark:text-white">
               From{" "}
               <a
                 href="https://mariosanchez.store"
-                className="underline font-semibold text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
+                className="underline font-semibold  text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
               >
                 mariosanchez.store
               </a>
             </p>
           </div>
+          {/* Columna 3: Descripción */}
         </div>
 
-        <nav className="mt-2 2xl:mt-4 p-2 2xl:p-4">
+        <nav className="pb-4 mr-4">
           {/* Mobile menu button */}
           <div className="flex justify-between items-center 2xl:hidden mb-4">
             <div className="flex items-center space-x-2 space-y-3">
@@ -175,8 +170,8 @@ export default function ArticleHeader() {
           </div>
 
           {/* Desktop menu */}
-          <div className="hidden 2xl:flex 2xl:items-center 2xl:justify-between">
-            <ul className="flex space-x-4 font-display text-gray-800 dark:text-gray-100 text-lg font-semibold">
+          <div className="hidden 2xl:flex 2xl:items-center 2xl:justify-between ml-8 ">
+            <ul className="flex gap-4 font-display text-gray-800 dark:text-gray-100 text-lg font-semibold">
               <li>
                 <Link
                   href="/"
@@ -210,8 +205,8 @@ export default function ArticleHeader() {
                 </Link>
               </li>
             </ul>
-            <div className="flex items-center ml-4 gap-2">
-              <div className="pr-4 border-r border-black dark:border-white">
+            <div className="flex items-center gap-2">
+              <div className="border-r border-black dark:border-white p-3">
                 <button
                   onClick={toggleTheme}
                   className="p-3 hover:bg-gray-200 dark:hover:bg-black group transition duration-200 cursor-pointer rounded-lg"
@@ -235,7 +230,9 @@ export default function ArticleHeader() {
               </div>
             </div>
           </div>
+          
         </nav>
+        <div className="mb-4 border-b-8 border-yellow-400" />
       </div>
     </header>
   );
