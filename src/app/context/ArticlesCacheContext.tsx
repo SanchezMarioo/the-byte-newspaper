@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, ReactNode, useEffect, useState } from "react";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 interface Article {
   id: number;
@@ -10,6 +11,8 @@ interface Article {
   description: string;
   content: string;
   tags: string[];
+  image_url: string;
+  published_at_formatted: string
 }
 
 interface ArticlesCacheContextType {
@@ -23,7 +26,7 @@ const ArticlesCacheContext = createContext<ArticlesCacheContextType | undefined>
   undefined
 );
 
-const CACHE_KEY = "articles_cache_v2";
+const CACHE_KEY_BASE = "articles_cache_v2";
 const CACHE_EXPIRY_HOURS = 24;
 const ARTICLES_API_URL = "/api/articles";
 
@@ -75,11 +78,20 @@ const normalizeContent = (value: unknown): string => {
   return "";
 };
 
-const normalizeArticle = (raw: any): Article => {
+const normalizeArticle = (raw: any, language: "es" | "en"): Article => {
   const categoryName =
-    raw?.category?.name_en || raw?.category?.name_es || raw?.category?.slug;
+    language === "es"
+      ? raw?.category?.name_es || raw?.category?.name_en
+      : raw?.category?.name_en || raw?.category?.name_es;
+  const categoryFallback = raw?.category?.slug;
   const tags = normalizeTags(raw?.tags ?? raw?.topic ?? raw?.topics);
-  const effectiveTags = tags.length ? tags : categoryName ? [categoryName] : [];
+  const effectiveTags = tags.length
+    ? tags
+    : categoryName
+      ? [categoryName]
+      : categoryFallback
+        ? [categoryFallback]
+        : [];
 
   return {
     id: Number(raw?.id ?? raw?._id ?? 0),
@@ -92,39 +104,54 @@ const normalizeArticle = (raw: any): Article => {
       raw?.createdBy?.email,
       "The Byte"
     ),
-    date: pickFirstString(raw?.date, raw?.publishedAt, raw?.createdAt),
+    date: pickFirstString(
+      raw?.published_at_formatted,
+      raw?.date,
+      raw?.publishedAt,
+      raw?.createdAt
+    ),
     title: pickFirstString(
+      language === "es" ? raw?.title_es : raw?.title_en,
       raw?.title_en,
       raw?.title_es,
       raw?.title?.value,
       raw?.title
     ),
     description: pickFirstString(
+      language === "es" ? raw?.excerpt_es : raw?.excerpt_en,
       raw?.excerpt_en,
       raw?.excerpt_es,
       raw?.excerpt,
       raw?.description
     ),
-    content: normalizeContent(raw?.content_en ?? raw?.content_es ?? raw?.content),
+    content: normalizeContent(
+      language === "es"
+        ? raw?.content_es ?? raw?.content_en ?? raw?.content
+        : raw?.content_en ?? raw?.content_es ?? raw?.content
+    ),
     tags: effectiveTags,
+    image_url: pickFirstString(raw?.image_url, raw?.image?.url),
   };
 };
 
 export function ArticlesCacheProvider({ children }: { children: ReactNode }) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const loadArticles = async () => {
-      const cachedData = localStorage.getItem(CACHE_KEY);
-      const cacheTimestamp = localStorage.getItem(`${CACHE_KEY}_timestamp`);
+      const cacheKey = `${CACHE_KEY_BASE}_${language}`;
+      const cacheTimestampKey = `${cacheKey}_timestamp`;
+      const cachedData = localStorage.getItem(cacheKey);
+      const cacheTimestamp = localStorage.getItem(cacheTimestampKey);
       const now = Date.now();
 
       if (
         cachedData &&
         cacheTimestamp &&
         now - parseInt(cacheTimestamp, 10) <
-          CACHE_EXPIRY_HOURS * 60 * 60 * 1000
+        CACHE_EXPIRY_HOURS * 60 * 60 * 1000
       ) {
         try {
           const parsed = JSON.parse(cachedData) as Article[];
@@ -142,13 +169,15 @@ export function ArticlesCacheProvider({ children }: { children: ReactNode }) {
         if (!response.ok) throw new Error("Failed to fetch articles");
         const data = await response.json();
         const docs = Array.isArray(data?.docs) ? data.docs : [];
-        const normalized = docs.map(normalizeArticle);
+        const normalized = docs.map((doc: any) =>
+          normalizeArticle(doc, language)
+        );
 
         setArticles(normalized);
 
         try {
-          localStorage.setItem(CACHE_KEY, JSON.stringify(normalized));
-          localStorage.setItem(`${CACHE_KEY}_timestamp`, now.toString());
+          localStorage.setItem(cacheKey, JSON.stringify(normalized));
+          localStorage.setItem(cacheTimestampKey, now.toString());
         } catch (error) {
           console.error("Error al guardar en cache:", error);
         }
@@ -161,7 +190,7 @@ export function ArticlesCacheProvider({ children }: { children: ReactNode }) {
     };
 
     loadArticles();
-  }, []);
+  }, [language]);
 
   const getArticle = (id: number): Article | undefined => {
     return articles.find((a) => a.id === id);

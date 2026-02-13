@@ -38,7 +38,7 @@ export default function ArticlePage() {
           <div className="flex items-center justify-center ">
             <figure className="p-4 border-2 border-white">
               <img
-                src="https://img.asmedia.epimg.net/resizer/v2/22OGAWGBPJCZBNQYNALXPPYLU4.png?auth=0f806312fc221e5a51b5e81855e19f56a7435ab953505c1831eb85a59e657049&width=1200&height=675&smart=true"
+                src={article.image_url}
                 width={900}
                 height={500}
               />
