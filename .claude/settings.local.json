@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add src/app/components/hero-section.tsx src/app/components/latest-articles.tsx src/app/components/popular-articles.tsx src/app/context/ArticlesCacheContext.tsx src/app/context/CategoriesCacheContext.tsx src/app/authors/ src/app/categories/)",
+      "Bash(git commit:*)",
+      "Bash(git push -u origin claude/gracious-hoover)",
+      "Bash(gh pr:*)",
+      "Bash(where gh)",
+      "Bash(winget list --name \"GitHub CLI\")",
+      "Bash(git add src/app/components/latest-articles.tsx)",
+      "Bash(git push)",
+      "Bash(git add src/app/categories/page.tsx)",
+      "Bash(git add src/app/articles/[id]/components/hero.tsx src/app/articles/[id]/page.tsx)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where node)",
+      "Bash(where npm)",
+      "Bash(where pnpm)",
+      "Bash(node --version)",
+      "Bash(git add src/app/articles/[id]/page.tsx src/app/context/ArticlesCacheContext.tsx)"
+    ]
+  }
+}
