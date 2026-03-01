@@ -227,9 +227,6 @@ export default function Header() {
                 >
                   {language.toUpperCase()}
                 </button>
-                <button onClick={refreshCategories}>
-                  Actualizar Categorías
-                </button>
               </div>
             </div>
           </div>

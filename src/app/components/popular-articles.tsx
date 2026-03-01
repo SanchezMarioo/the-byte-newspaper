@@ -1,38 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { useArticlesCache } from "@/app/context/ArticlesCacheContext";
-
-type FilterMode = "THIS_MONTH" | "ALL_TIME";
 
 export function PopularArticles() {
     const { articles, isLoading } = useArticlesCache();
-    const [filter, setFilter] = useState<FilterMode>("THIS_MONTH");
 
-    const getFilteredArticles = () => {
-        const sorted = [...articles].sort(
-            (a, b) =>
-                new Date(b.published_at_formatted).getTime() -
-                new Date(a.published_at_formatted).getTime()
-        );
-
-        if (filter === "THIS_MONTH") {
-            const now = new Date();
-            const thisMonth = sorted.filter((article) => {
-                const articleDate = new Date(article.published_at_formatted);
-                return (
-                    articleDate.getMonth() === now.getMonth() &&
-                    articleDate.getFullYear() === now.getFullYear()
-                );
-            });
-            return thisMonth.slice(0, 6);
-        }
-
-        return sorted.slice(0, 6);
-    };
-
-    const displayedArticles = getFilteredArticles();
+    const displayedArticles = articles;
 
     if (isLoading) {
         return (
@@ -47,33 +21,11 @@ export function PopularArticles() {
     return (
         <section className="bg-stone-200 dark:bg-[#181617] mx-4 sm:mx-6 md:mx-8 lg:mx-10 p-4">
             <div className="w-[79%] mx-auto">
-                {/* Header con título y filtros */}
-                <div className="border-t border-b border-black dark:border-white py-6 flex justify-between items-center">
+                {/* Header con título */}
+                <div className="border-t border-b border-black dark:border-white py-6">
                     <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white font-display ml-2 -rotate-1 inline-block bg-yellow-300 dark:bg-gray-950">
                         Popular Articles
                     </h2>
-                    <div className="flex gap-0">
-                        <button
-                            onClick={() => setFilter("THIS_MONTH")}
-                            className={`px-4 py-2 text-sm font-semibold transition-colors ${
-                                filter === "THIS_MONTH"
-                                    ? "bg-gray-900 text-white dark:bg-white dark:text-black"
-                                    : "border-2 border-gray-900 text-gray-900 dark:border-white dark:text-white hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
-                            }`}
-                        >
-                            THIS MONTH
-                        </button>
-                        <button
-                            onClick={() => setFilter("ALL_TIME")}
-                            className={`px-4 py-2 text-sm font-semibold transition-colors ${
-                                filter === "ALL_TIME"
-                                    ? "bg-gray-900 text-white dark:bg-white dark:text-black"
-                                    : "border-2 border-gray-900 text-gray-900 dark:border-white dark:text-white hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
-                            }`}
-                        >
-                            ALL TIME
-                        </button>
-                    </div>
                 </div>
 
                 {/* Grid de artículos */}
