@@ -12,7 +12,9 @@ interface Article {
   content: string;
   tags: string[];
   image_url: string;
-  published_at_formatted: string
+  published_at_formatted: string;
+  category_id?: number;
+  category_name?: string;
 }
 
 interface ArticlesCacheContextType {
@@ -26,7 +28,7 @@ const ArticlesCacheContext = createContext<ArticlesCacheContextType | undefined>
   undefined
 );
 
-const CACHE_KEY_BASE = "articles_cache_v2";
+const CACHE_KEY_BASE = "articles_cache_v3";
 const CACHE_EXPIRY_HOURS = 24;
 const ARTICLES_API_URL = "/api/articles";
 
@@ -136,6 +138,8 @@ const normalizeArticle = (raw: any, language: "es" | "en"): Article => {
     ),
     tags: effectiveTags,
     image_url: pickFirstString(raw?.image_url, raw?.image?.url),
+    category_id: raw?.category?.id ? Number(raw.category.id) : undefined,
+    category_name: categoryName || categoryFallback || undefined,
   };
 };
 

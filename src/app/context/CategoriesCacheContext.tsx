@@ -15,6 +15,7 @@ interface Category {
   name_en?: string;
   name_es?: string;
   isActive?: boolean;
+  slug?: string;
 }
 
 interface CategoriesCacheContextType {
@@ -28,7 +29,7 @@ const CategoriesCacheContext = createContext<
   CategoriesCacheContextType | undefined
 >(undefined);
 
-const CATEGORIES_CACHE_KEY = "categories_cache";
+const CATEGORIES_CACHE_KEY = "categories_cache_v2";
 const CATEGORIES_CACHE_EXPIRY_HOURS = 24;
 const REVALIDATE_ON_FOCUS = true; // Revalidar cuando vuelves a la pestaña
 const REVALIDATE_INTERVAL_MINUTES = 30; // Revalidar cada 30 minutos
@@ -126,6 +127,7 @@ export function CategoriesCacheProvider({ children }: { children: ReactNode }) {
                 ? category.name_es || category.name_en || "Unknown"
                 : category.name_en || category.name_es || "Unknown",
             isActive: index === 0,
+            slug: category.slug || undefined,
           })
         );
 
