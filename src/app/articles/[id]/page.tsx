@@ -16,8 +16,11 @@ export default function ArticlePage() {
     return (
       <div className="w-3/4 mx-auto py-12 text-center">
         <h1 className="text-3xl font-bold mb-4">Artículo no encontrado</h1>
-        <Link href="/" className="text-blue-600 hover:underline">
-          Volver al inicio
+        <Link
+          href="/"
+          className="text-sm font-semibold uppercase tracking-wider hover:underline hover:decoration-yellow-400"
+        >
+          ← Volver al inicio
         </Link>
       </div>
     );
@@ -27,50 +30,56 @@ export default function ArticlePage() {
     <>
       <Header />
       <article className="bg-stone-200 dark:bg-[#181617] text-black dark:text-white transition-colors duration-300">
-        <div className="w-3/4 mx-auto">
-          {/* Header */}
+        <div className="w-3/4 mx-auto pb-16">
+
+          {/* Hero: tags, título, autor, fecha */}
           <HeroSection
             title={article.title}
             topic={article.tags}
             author={article.author}
             date={article.date}
           />
-          <div className="flex items-center justify-center ">
-            <figure className="p-4 border-2 border-white">
+
+          {/* Imagen destacada */}
+          {article.image_url && (
+            <figure className="my-10 border border-black dark:border-white overflow-hidden">
               <img
                 src={article.image_url}
+                alt={article.title}
+                className="w-full object-cover"
                 width={900}
                 height={500}
               />
- 
             </figure>
-          </div>
+          )}
 
-          {/* Content */}
-          <div className="prose prose-invert max-w-none">
-            <p className="text-lg leading-relaxed mb-6">
+          {/* Entradilla / descripción */}
+          {article.description && (
+            <p className="text-xl font-semibold leading-relaxed mb-10 pb-10 border-b border-black dark:border-white">
               {article.description}
             </p>
+          )}
 
-            <div className=" py-5 space-y-4 text-base leading-relaxed">
-              {article.content
-                .split("\n")
-                .filter((paragraph) => paragraph.trim())
-                .map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
-            </div>
+          {/* Cuerpo del artículo */}
+          <div className="space-y-6 text-lg leading-relaxed">
+            {article.content
+              .split("\n")
+              .filter((paragraph) => paragraph.trim())
+              .map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
           </div>
 
           {/* Footer */}
-          <div className="mt-12 pt-8 border-t border-black dark:border-white">
+          <div className="mt-16 pt-8 border-t border-black dark:border-white">
             <Link
               href="/"
-              className="text-sm font-semibold inline-block hover:underline text-blue-600 dark:text-blue-400"
+              className="text-sm font-semibold uppercase tracking-wider hover:underline hover:decoration-yellow-400 hover:underline-offset-4"
             >
               ← Volver a artículos
             </Link>
           </div>
+
         </div>
       </article>
     </>
