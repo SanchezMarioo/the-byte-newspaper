@@ -15,8 +15,8 @@ const buildCmsHeaders = (): HeadersInit => {
     headers.Authorization = `Bearer ${CMS_API_TOKEN}`;
   }
 
-  if (CMS_API_KEY) {
-    headers["x-api-key"] = CMS_API_KEY;
+  if (CMS_API_KEY && !CMS_API_TOKEN) {
+    headers.Authorization = `Bearer ${CMS_API_KEY}`;
   }
 
   return headers;
