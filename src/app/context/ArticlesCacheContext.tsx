@@ -110,6 +110,11 @@ const normalizeArticle = (raw: any, language: "es" | "en"): Article => {
       raw?.publishedAt,
       raw?.createdAt
     ),
+    published_at_formatted: pickFirstString(
+      raw?.published_at_formatted,
+      raw?.publishedAt,
+      raw?.createdAt
+    ),
     title: pickFirstString(
       language === "es" ? raw?.title_es : raw?.title_en,
       raw?.title_en,
