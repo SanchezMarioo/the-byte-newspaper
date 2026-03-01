@@ -27,7 +27,14 @@ export function LatestArticles() {
               {/* Left column - Author & Date */}
               <div className="w-full lg:w-1/3 p-4 sm:p-6 lg:p-8 lg:border-r border-black dark:border-white">
                 <p className="text-sm italic mb-2 lg:mb-4">
-                  By <span className="font-semibold">{article.author}</span>
+                  By{" "}
+                  <Link
+                    href={`/authors/${encodeURIComponent(article.author)}`}
+                    className="font-semibold hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {article.author}
+                  </Link>
                 </p>
                 <p className="text-sm mb-4 lg:mb-0">{article.date}</p>
               </div>

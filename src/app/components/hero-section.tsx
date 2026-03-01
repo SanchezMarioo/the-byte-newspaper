@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { useCategoriesCache } from "@/app/context/CategoriesCacheContext";
 
@@ -251,9 +252,11 @@ export default function HeroSection() {
                   style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
                   {categories.map((tag) => (
-                    <span
+                    <Link
                       key={tag.id}
+                      href={`/categories/${tag.id}`}
                       onMouseDown={handleMouseDown}
+                      onClick={(e) => isDragging && e.preventDefault()}
                       className={`px-3 py-2 uppercase sm:px-4 text-xs sm:text-sm font-semibold whitespace-nowrap flex-shrink-0 transition-colors select-none ${
                         isDragging ? 'cursor-grabbing' : 'cursor-grab'
                       } ${
@@ -263,7 +266,7 @@ export default function HeroSection() {
                       }`}
                     >
                       {tag.name}
-                    </span>
+                    </Link>
                   ))}
                 </div>
 
