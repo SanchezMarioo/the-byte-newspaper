@@ -3,13 +3,24 @@
 import { createContext, useContext, ReactNode, useEffect, useState } from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
 
-interface Article {
+export interface ListItem {
+  title: string;
+  body: string;
+}
+
+export interface ContentBlock {
+  type: "paragraph" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "ul" | "ol";
+  text: string;
+  items?: ListItem[];
+}
+
+export interface Article {
   id: number;
   author: string;
   date: string;
   title: string;
   description: string;
-  content: string;
+  content: ContentBlock[];
   tags: string[];
   image_url: string;
   published_at_formatted: string;
@@ -28,7 +39,7 @@ const ArticlesCacheContext = createContext<ArticlesCacheContextType | undefined>
   undefined
 );
 
-const CACHE_KEY_BASE = "articles_cache_v3";
+const CACHE_KEY_BASE = "articles_cache_v6";
 const CACHE_EXPIRY_HOURS = 24;
 const ARTICLES_API_URL = "/api/articles";
 
@@ -67,17 +78,59 @@ const extractTextFromRich = (node: any): string => {
   return "";
 };
 
-const normalizeContent = (value: unknown): string => {
-  if (!value) return "";
-  if (typeof value === "string") return value;
+const HEADING_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
+
+const extractListItem = (listitem: any): ListItem => {
+  let title = "";
+  let bodyParts: string[] = [];
+  for (const node of listitem.children || []) {
+    if (node.type === "linebreak") {
+      bodyParts.push(" ");
+    } else if (node.type === "text") {
+      // format & 1 = bold — use as title if not yet set
+      if ((node.format & 1) && !title) {
+        title = node.text;
+      } else {
+        bodyParts.push(node.text);
+      }
+    } else if (Array.isArray(node.children)) {
+      bodyParts.push(extractTextFromRich(node));
+    }
+  }
+  return { title, body: bodyParts.join("").trim() };
+};
+
+const normalizeContent = (value: unknown): ContentBlock[] => {
+  if (!value) return [];
+  if (typeof value === "string") {
+    return value
+      .split("\n")
+      .map((t) => t.trim())
+      .filter(Boolean)
+      .map((text) => ({ type: "paragraph" as const, text }));
+  }
   const root = (value as any)?.root;
   if (root?.children) {
-    const paragraphs = root.children.map((child: any) =>
-      extractTextFromRich(child).trim()
-    );
-    return paragraphs.filter(Boolean).join("\n");
+    return root.children
+      .map((child: any) => {
+        if (child.type === "list") {
+          const listType: "ul" | "ol" = child.tag === "ol" ? "ol" : "ul";
+          const items = (child.children || [])
+            .filter((n: any) => n.type === "listitem")
+            .map(extractListItem);
+          return items.length ? { type: listType, text: "", items } : null;
+        }
+        const text = extractTextFromRich(child).trim();
+        if (!text) return null;
+        const type =
+          child.type === "heading" && child.tag && HEADING_TAGS.has(child.tag)
+            ? (child.tag as ContentBlock["type"])
+            : "paragraph";
+        return { type, text };
+      })
+      .filter(Boolean) as ContentBlock[];
   }
-  return "";
+  return [];
 };
 
 const normalizeArticle = (raw: any, language: "es" | "en"): Article => {
