@@ -14,7 +14,7 @@ export default function CategoryPage() {
 
   const category = categories.find((c) => c.id === categoryId);
   const filteredArticles = articles.filter(
-    (article) => article.category_id === categoryId
+    (article) => article.categories?.some((cat) => cat.id === categoryId)
   );
 
   const isLoading = articlesLoading || categoriesLoading;

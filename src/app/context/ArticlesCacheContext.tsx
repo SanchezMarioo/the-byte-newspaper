@@ -14,6 +14,13 @@ export interface ContentBlock {
   items?: ListItem[];
 }
 
+export interface Category {
+  id: number;
+  name_en: string;
+  name_es: string;
+  slug: string;
+}
+
 export interface Article {
   id: number;
   author: string;
@@ -24,8 +31,7 @@ export interface Article {
   tags: string[];
   image_url: string;
   published_at_formatted: string;
-  category_id?: number;
-  category_name?: string;
+  categories?: Category[];
 }
 
 interface ArticlesCacheContextType {
@@ -134,19 +140,28 @@ const normalizeContent = (value: unknown): ContentBlock[] => {
 };
 
 const normalizeArticle = (raw: any, language: "es" | "en"): Article => {
-  const categoryName =
-    language === "es"
-      ? raw?.category?.name_es || raw?.category?.name_en
-      : raw?.category?.name_en || raw?.category?.name_es;
-  const categoryFallback = raw?.category?.slug;
+  // Handle category as array or single object
+  const categoryArray = Array.isArray(raw?.category)
+    ? raw?.category
+    : raw?.category
+      ? [raw?.category]
+      : [];
+
+  const categories: Category[] = categoryArray
+    .filter((cat: any) => cat && cat.id)
+    .map((cat: any) => ({
+      id: Number(cat.id),
+      name_en: cat.name_en || "",
+      name_es: cat.name_es || "",
+      slug: cat.slug || "",
+    }));
+
+  const categoryNames = categories.map((cat) =>
+    language === "es" ? cat.name_es || cat.name_en : cat.name_en || cat.name_es
+  ).filter(Boolean);
+
   const tags = normalizeTags(raw?.tags ?? raw?.topic ?? raw?.topics);
-  const effectiveTags = tags.length
-    ? tags
-    : categoryName
-      ? [categoryName]
-      : categoryFallback
-        ? [categoryFallback]
-        : [];
+  const effectiveTags = tags.length ? tags : categoryNames;
 
   return {
     id: Number(raw?.id ?? raw?._id ?? 0),
@@ -191,8 +206,7 @@ const normalizeArticle = (raw: any, language: "es" | "en"): Article => {
     ),
     tags: effectiveTags,
     image_url: pickFirstString(raw?.image_url, raw?.image?.url),
-    category_id: raw?.category?.id ? Number(raw.category.id) : undefined,
-    category_name: categoryName || categoryFallback || undefined,
+    categories: categories.length > 0 ? categories : undefined,
   };
 };
 

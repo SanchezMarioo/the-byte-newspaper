@@ -14,11 +14,11 @@ export default function CategoriesPage() {
   const isLoading = categoriesLoading || articlesLoading;
 
   const getArticleCount = (categoryId: number) =>
-    articles.filter((a) => a.category_id === categoryId).length;
+    articles.filter((a) => a.categories?.some((cat) => cat.id === categoryId)).length;
 
   const getLatestArticle = (categoryId: number) =>
     articles
-      .filter((a) => a.category_id === categoryId)
+      .filter((a) => a.categories?.some((cat) => cat.id === categoryId))
       .sort(
         (a, b) =>
           new Date(b.published_at_formatted).getTime() -
