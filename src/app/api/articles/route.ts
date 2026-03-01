@@ -1,10 +1,32 @@
 import { NextResponse } from "next/server";
 
+const CMS_BASE_URL =
+  process.env.CMS_BASE_URL ?? "https://newspapercms.mariosanchez.store/api";
+const CMS_API_TOKEN = process.env.CMS_API_TOKEN;
+const CMS_API_KEY = process.env.CMS_API_KEY;
+
+const buildCmsHeaders = (): HeadersInit => {
+  const headers: HeadersInit = {
+    Accept: "application/json",
+    "User-Agent": "the-byte-newspaper/1.0",
+  };
+
+  if (CMS_API_TOKEN) {
+    headers.Authorization = `Bearer ${CMS_API_TOKEN}`;
+  }
+
+  if (CMS_API_KEY) {
+    headers["x-api-key"] = CMS_API_KEY;
+  }
+
+  return headers;
+};
+
 export async function GET() {
   try {
-    const response = await fetch(
-      "https://newspapercms.mariosanchez.store/api/articles?limit=0"
-    );
+    const response = await fetch(`${CMS_BASE_URL}/articles?limit=0`, {
+      headers: buildCmsHeaders(),
+    });
 
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
