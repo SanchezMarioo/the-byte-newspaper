@@ -64,7 +64,7 @@ export default function ArticlePage() {
           <div className="space-y-6 text-lg leading-relaxed">
             {article.content.map((block, index) => {
               if (block.type === "h1") return <h1 key={index} className="font-display font-black text-4xl lg:text-5xl leading-tight mt-10 mb-4">{block.text}</h1>;
-              if (block.type === "h2") return <h2 key={index} className="font-display font-bold text-3xl lg:text-4xl leading-tight mt-10 mb-4 border-b border-black dark:border-white pb-2">{block.text}</h2>;
+              if (block.type === "h2") return <h2 key={index} className="font-display font-bold text-3xl lg:text-4xl leading-tight mt-10 mb-4  border-black dark:border-white pb-2">{block.text}</h2>;
               if (block.type === "h3") return <h3 key={index} className="font-display font-bold text-2xl lg:text-3xl leading-tight mt-8 mb-3">{block.text}</h3>;
               if (block.type === "h4") return <h4 key={index} className="font-display font-bold text-xl lg:text-2xl leading-tight mt-6 mb-2">{block.text}</h4>;
               if (block.type === "h5") return <h5 key={index} className="font-semibold text-lg leading-tight mt-6 mb-2">{block.text}</h5>;
