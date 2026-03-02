@@ -161,7 +161,7 @@ export default function Header() {
                 <Link
                   href="#"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-2 px-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded hover:underline text-black dark:text-white transition-colors"
+                  className="disabled block py-2 px-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded hover:underline text-black dark:text-white transition-colors"
                 >
                   Newsletter
                 </Link>
