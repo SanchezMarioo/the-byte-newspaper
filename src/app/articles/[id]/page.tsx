@@ -35,6 +35,7 @@ export default function ArticlePage() {
           {/* Hero: tags, título, autor, fecha */}
           <HeroSection
             title={article.title}
+            description={article.description}
             topic={article.tags}
             author={article.author}
             date={article.date}
@@ -51,13 +52,6 @@ export default function ArticlePage() {
                 height={400}
               />
             </figure>
-          )}
-
-          {/* Entradilla / descripción */}
-          {article.description && (
-            <p className="text-xl font-semibold leading-relaxed mb-10 pb-10 border-b border-black dark:border-white">
-              {article.description}
-            </p>
           )}
 
           {/* Cuerpo del artículo */}

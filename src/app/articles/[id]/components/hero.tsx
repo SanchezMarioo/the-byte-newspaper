@@ -2,6 +2,7 @@ import Link from "next/link";
 
 type HeroSectionProps = {
   title: string;
+  description:string;
   author: string;
   date: string;
   topic: string | string[];
@@ -9,6 +10,7 @@ type HeroSectionProps = {
 
 export default function HeroSection({
   title,
+  description,
   author,
   date,
   topic,
@@ -37,6 +39,9 @@ export default function HeroSection({
       <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-tight mb-10">
         {title}
       </h1>
+      <h2 className="font-sans font-medium text-xl lg:text-2xl leading-tight mt-10 mb-4  border-black dark:border-white pb-2">
+        {description}
+      </h2>
 
       {/* Metadatos + línea amarilla */}
       <div className="flex flex-wrap items-center gap-3 text-sm pb-8 border-b-4 border-yellow-400">
