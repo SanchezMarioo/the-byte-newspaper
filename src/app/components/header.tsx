@@ -150,16 +150,16 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href="/categories"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block py-2 px-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded hover:underline text-black dark:text-white transition-colors"
                 >
-                  Courses
+                  Categorias
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href="#"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block py-2 px-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded hover:underline text-black dark:text-white transition-colors"
                 >
