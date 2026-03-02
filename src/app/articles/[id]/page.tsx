@@ -42,13 +42,13 @@ export default function ArticlePage() {
 
           {/* Imagen destacada */}
           {article.image_url && (
-            <figure className="my-10 border border-black dark:border-white overflow-hidden">
+            <figure className="my-10 max-w-4xl mx-auto border border-black dark:border-white overflow-hidden">
               <img
                 src={article.image_url}
                 alt={article.title}
                 className="w-full object-cover"
-                width={700}
-                height={500}
+                width={500}
+                height={400}
               />
             </figure>
           )}
