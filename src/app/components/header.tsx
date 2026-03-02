@@ -143,7 +143,7 @@ export default function Header() {
                 <Link
                   href="/about"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-2 px-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded hover:underline text-black dark:text-white transition-colors"
+                  className=" disabled block py-2 px-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded hover:underline text-black dark:text-white transition-colors"
                 >
                   Links
                 </Link>
@@ -190,16 +190,16 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href="/categories"
                   className="hover:underline text-black dark:text-white"
                 >
-                  Courses
+                  Categories
                 </Link>
               </li>
               <li>
                 <Link
                   href="/contact"
-                  className="hover:underline text-black dark:text-white"
+                  className="disabled hover:underline text-black dark:text-white"
                 >
                   Newsletter
                 </Link>
