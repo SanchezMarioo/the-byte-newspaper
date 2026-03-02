@@ -20,7 +20,7 @@ export default function HeroSection({
     : topic.split(",").map((t) => t.trim()).filter(Boolean);
 
   return (
-    <section className="py-10 border-t border-black dark:border-white">
+    <section className="py-10 border-black dark:border-white">
       {/* Tags */}
       {topics.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-8">
