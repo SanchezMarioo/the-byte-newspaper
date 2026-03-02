@@ -47,7 +47,7 @@ export default function ArticlePage() {
                 src={article.image_url}
                 alt={article.title}
                 className="w-full object-cover"
-                width={900}
+                width={700}
                 height={500}
               />
             </figure>
